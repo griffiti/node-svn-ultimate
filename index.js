@@ -1035,38 +1035,3 @@ var getBranches = function( url, options, callback ) {
 	} );
 };
 exports.util.getBranches = getBranches;
-
-/** Uses node's semver package to work out the latest branch value
- * @function getLatestBranch
- * @memberof util
- * @param {string} url - Project URL to get latest branch for
- * @param {object} options - Options object
- * @param {function} [callback] - Complete callback
- */
-var getLatestBranch = function( url, options, callback ) {
-	if ( typeof options === "function" ) {
-		callback = options;
-		options = null;
-	}
-	options = options || {};
-	getBranches( url, options, function( err, branchArray ) {
-		var latest;
-		if ( !err && Array.isArray( branchArray ) && branchArray.length > 0 ) {
-            if (options.branchPrefix !== 'undefined') {
-                console.log('Branch Prefix: ' + options.branchPrefix);
-            }
-			branchArray.sort( function( a, b ) {
-				try {
-					return semver.rcompare( a.name, b.name );
-				}
-				catch ( err2 ) {
-					return -1;
-				}
-			} );
-			latest = branchArray[0];
-		}
-		callback( err, latest );
-	} );
-};
-exports.util.getLatestBranch = getLatestBranch;
-
